@@ -10,6 +10,7 @@ class Signup extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   handleInput(type) {
@@ -33,23 +34,23 @@ class Signup extends React.Component {
             <input
               type="text"
               value={this.state.username}
-              onChanged={this.handleInput('username')}
+              onChange={this.handleInput('username')}
               >
             </input>
           </label>
           <label>Email:
             <input
-              type="text"
+              type="email"
               value={this.state.email}
-              onChanged={this.handleInput('email')}
+              onChange={this.handleInput('email')}
               >
             </input>
           </label>
           <label>Password:
             <input
-              type="text"
+              type="password"
               value={this.state.password}
-              onChanged={this.handleInput('password')}
+              onChange={this.handleInput('password')}
               >
             </input>
           </label>
