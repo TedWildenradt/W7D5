@@ -8,11 +8,54 @@ class Signup extends React.Component {
       email: '',
       password: ''
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleInput(type) {
+    return (e) => {
+      this.setState({ [type]: e.target.value});
+    };
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.createNewUser(this.state)
+      .then(() => this.props.history.push('/chirps'));
   }
 
   render () {
     return (
-      <div></div>
+      <div className="session-form">
+        <h2>Sign Up!</h2>
+        <form>
+          <label>Username:
+            <input
+              type="text"
+              value={this.state.username}
+              onChanged={this.handleInput('username')}
+              >
+            </input>
+          </label>
+          <label>Email:
+            <input
+              type="text"
+              value={this.state.email}
+              onChanged={this.handleInput('email')}
+              >
+            </input>
+          </label>
+          <label>Password:
+            <input
+              type="text"
+              value={this.state.password}
+              onChanged={this.handleInput('password')}
+              >
+            </input>
+          </label>
+          <button onClick={this.handleSubmit}>Sign Up</button>
+        </form>
+      </div>
     );
   }
 }
