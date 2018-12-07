@@ -111,3 +111,33 @@ Processing by StaticPagesController#root as HTML
 Completed 200 OK in 39ms (Views: 36.2ms | ActiveRecord: 0.0ms)
 
 
+Started GET "/" for 127.0.0.1 at 2018-12-07 12:24:40 -0800
+Processing by StaticPagesController#root as HTML
+  Rendering static_pages/root.html.erb within layouts/application
+  Rendered static_pages/root.html.erb within layouts/application (1.4ms)
+Completed 200 OK in 709ms (Views: 704.1ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2018-12-07 14:29:58 -0800
+
+NameError - undefined local variable or method `api' for #<ActionDispatch::Routing::Mapper:0x00007fb75a2331b0>:
+  config/routes.rb:5:in `block in <main>'
+  config/routes.rb:1:in `<main>'
+
+Started POST "/__better_errors/f3360ec22a90a83b/variables" for 127.0.0.1 at 2018-12-07 14:29:59 -0800
+Started GET "/" for 127.0.0.1 at 2018-12-07 14:30:14 -0800
+Processing by StaticPagesController#root as HTML
+  Rendering static_pages/root.html.erb within layouts/application
+  Rendered static_pages/root.html.erb within layouts/application (0.8ms)
+Completed 200 OK in 239ms (Views: 226.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/rails/info/routes" for 127.0.0.1 at 2018-12-07 14:30:33 -0800
+Processing by Rails::InfoController#routes as HTML
+  Rendering /usr/local/var/rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/railties-5.2.2/lib/rails/templates/rails/info/routes.html.erb within layouts/application
+  Rendered collection of /usr/local/var/rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/actionpack-5.2.2/lib/action_dispatch/middleware/templates/routes/_route.html.erb [9 times] (430.3ms)
+  Rendered /usr/local/var/rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/actionpack-5.2.2/lib/action_dispatch/middleware/templates/routes/_table.html.erb (63.1ms)
+  Rendered /usr/local/var/rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/railties-5.2.2/lib/rails/templates/rails/info/routes.html.erb within layouts/application (552.8ms)
+Completed 200 OK in 621ms (Views: 573.7ms | ActiveRecord: 0.0ms)
+
+
