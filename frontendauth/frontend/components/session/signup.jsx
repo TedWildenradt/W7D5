@@ -38,14 +38,16 @@ class Signup extends React.Component {
               >
             </input>
           </label>
+
           <label>Email:
             <input
-              type="email"
+              type="text"
               value={this.state.email}
               onChange={this.handleInput('email')}
               >
             </input>
           </label>
+
           <label>Password:
             <input
               type="password"
@@ -54,6 +56,7 @@ class Signup extends React.Component {
               >
             </input>
           </label>
+
           <button onClick={this.handleSubmit}>Sign Up</button>
         </form>
       </div>
