@@ -12787,7 +12787,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener('DOMContentLoaded', function () {
   var root = document.getElementById('root');
-  var preloadedState = undefined;
+  var preloadedState = void 0;
   if (window.currentUser) {
     preloadedState = {
       session: {
@@ -25566,10 +25566,15 @@ var _entities = __webpack_require__(238);
 
 var _entities2 = _interopRequireDefault(_entities);
 
+var _session = __webpack_require__(287);
+
+var _session2 = _interopRequireDefault(_session);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = (0, _redux.combineReducers)({
-  entities: _entities2.default
+  entities: _entities2.default,
+  session: _session2.default
 });
 
 /***/ }),
@@ -29362,11 +29367,17 @@ var _chirp_index_container = __webpack_require__(283);
 
 var _chirp_index_container2 = _interopRequireDefault(_chirp_index_container);
 
+var _signup_container = __webpack_require__(290);
+
+var _signup_container2 = _interopRequireDefault(_signup_container);
+
 var _home = __webpack_require__(286);
 
 var _home2 = _interopRequireDefault(_home);
 
 var _reactRouterDom = __webpack_require__(62);
+
+var _route_utils = __webpack_require__(292);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29376,7 +29387,8 @@ exports.default = function () {
     null,
     _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _nav_bar_container2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/chirps', component: _chirp_index_container2.default })
+    _react2.default.createElement(_route_utils.ProtectedRoute, { path: '/chirps', component: _chirp_index_container2.default }),
+    _react2.default.createElement(_route_utils.AuthRoute, { path: '/signup', component: _signup_container2.default })
   );
 };
 
@@ -29469,24 +29481,29 @@ var _nav_bar = __webpack_require__(282);
 
 var _nav_bar2 = _interopRequireDefault(_nav_bar);
 
+var _session = __webpack_require__(288);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    currentUser: state.session.currentUser
+  };
+};
 
 // Comment this back in after you have built the login functionality
 
-// import { logout } from '../../actions/session';
-
-// const mapStateToProps = state => ({
-//   currentUser: state.session.currentUser,
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   logout: () => dispatch(logout()),
-// });
-
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    logout: function logout() {
+      return dispatch((0, _session.logout)());
+    }
+  };
+};
 
 // Comment this out when you have built the login functionality
-var mapStateToProps = null;
-var mapDispatchToProps = null;
+// const mapStateToProps = null;
+// const mapDispatchToProps = null;
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_nav_bar2.default);
 
@@ -29513,7 +29530,21 @@ exports.default = function (_ref) {
   var currentUser = _ref.currentUser,
       logout = _ref.logout;
 
-  var display = _react2.default.createElement(
+  var display = currentUser ? _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'p',
+      null,
+      'Hello, ',
+      currentUser.username
+    ),
+    _react2.default.createElement(
+      'button',
+      { onClick: logout },
+      'Log Out'
+    )
+  ) : _react2.default.createElement(
     'div',
     null,
     _react2.default.createElement(
@@ -29757,6 +29788,286 @@ exports.default = function () {
     )
   );
 };
+
+/***/ }),
+/* 287 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _session = __webpack_require__(288);
+
+var _nullSession = {
+  currentUser: null
+};
+
+exports.default = function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullSession;
+  var action = arguments[1];
+
+  Object.freeze(state);
+  switch (action.type) {
+    case _session.RECEIVE_CURRENT_USER:
+      return Object.assign({}, { currentUser: action.user });
+    case _session.LOGOUT_CURRENT_USER:
+      return _nullSession;
+    default:
+      return state;
+  }
+};
+
+/***/ }),
+/* 288 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.logout = exports.login = exports.createNewUser = exports.LOGOUT_CURRENT_USER = exports.RECEIVE_CURRENT_USER = undefined;
+
+var _session = __webpack_require__(289);
+
+var RECEIVE_CURRENT_USER = exports.RECEIVE_CURRENT_USER = "RECEIVE_CURRENT_USER";
+var LOGOUT_CURRENT_USER = exports.LOGOUT_CURRENT_USER = "LOGOUT_CURRENT_USER";
+
+var receiveCurrentUser = function receiveCurrentUser(user) {
+  return { // Action creator
+    type: RECEIVE_CURRENT_USER,
+    user: user
+  };
+};
+
+var logoutCurrentUser = function logoutCurrentUser() {
+  return { // Action creator
+    type: LOGOUT_CURRENT_USER
+  };
+};
+
+var createNewUser = exports.createNewUser = function createNewUser(formUser) {
+  return function (dispatch) {
+    return (0, _session.postUser)(formUser).then(function (user) {
+      return dispatch(receiveCurrentUser(user));
+    });
+  };
+};
+
+var login = exports.login = function login(formUser) {
+  return function (dispatch) {
+    return (0, _session.postSession)(formUser).then(function (user) {
+      return dispatch(receiveCurrentUser(user));
+    });
+  };
+};
+
+var logout = exports.logout = function logout() {
+  return function (dispatch) {
+    return (0, _session.deleteSession)().then(function () {
+      return dispatch(logoutCurrentUser());
+    });
+  };
+};
+
+/***/ }),
+/* 289 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var postUser = exports.postUser = function postUser(user) {
+  return $.ajax({
+    url: '/api/users',
+    method: 'POST',
+    data: { user: user }
+  });
+};
+
+var postSession = exports.postSession = function postSession(user) {
+  $.ajax({
+    url: '/api/session',
+    method: 'POST',
+    data: { user: user }
+  });
+};
+
+var deleteSession = exports.deleteSession = function deleteSession() {
+  $.ajax({
+    url: '/api/session',
+    method: 'DELETE'
+  });
+};
+
+/***/ }),
+/* 290 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = __webpack_require__(39);
+
+var _session = __webpack_require__(288);
+
+var _signup = __webpack_require__(291);
+
+var _signup2 = _interopRequireDefault(_signup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    createNewUser: function createNewUser(formUser) {
+      return dispatch((0, _session.createNewUser)(formUser));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(_signup2.default);
+
+/***/ }),
+/* 291 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Signup = function (_React$Component) {
+  _inherits(Signup, _React$Component);
+
+  function Signup(props) {
+    _classCallCheck(this, Signup);
+
+    var _this = _possibleConstructorReturn(this, (Signup.__proto__ || Object.getPrototypeOf(Signup)).call(this, props));
+
+    _this.state = {
+      username: '',
+      email: '',
+      password: ''
+    };
+
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    _this.handleInput = _this.handleInput.bind(_this);
+    return _this;
+  }
+
+  _createClass(Signup, [{
+    key: 'handleInput',
+    value: function handleInput(type) {
+      var _this2 = this;
+
+      return function (e) {
+        _this2.setState(_defineProperty({}, type, e.target.value));
+      };
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event) {
+      var _this3 = this;
+
+      event.preventDefault();
+      this.props.createNewUser(this.state).then(function () {
+        return _this3.props.history.push('/chirps');
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'session-form' },
+        _react2.default.createElement(
+          'h2',
+          null,
+          'Sign Up!'
+        ),
+        _react2.default.createElement(
+          'form',
+          null,
+          _react2.default.createElement(
+            'label',
+            null,
+            'Username:',
+            _react2.default.createElement('input', {
+              type: 'text',
+              value: this.state.username,
+              onChange: this.handleInput('username')
+            })
+          ),
+          _react2.default.createElement(
+            'label',
+            null,
+            'Email:',
+            _react2.default.createElement('input', {
+              type: 'text',
+              value: this.state.email,
+              onChange: this.handleInput('email')
+            })
+          ),
+          _react2.default.createElement(
+            'label',
+            null,
+            'Password:',
+            _react2.default.createElement('input', {
+              type: 'password',
+              value: this.state.password,
+              onChange: this.handleInput('password')
+            })
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this.handleSubmit },
+            'Sign Up'
+          )
+        )
+      );
+    }
+  }]);
+
+  return Signup;
+}(_react2.default.Component);
+
+exports.default = Signup;
+
+/***/ }),
+/* 292 */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: SyntaxError: Unexpected token (24:0)\n\n\u001b[0m \u001b[90m 22 | \u001b[39m      loggedIn \u001b[33m?\u001b[39m \u001b[33m<\u001b[39m\u001b[33mComponent\u001b[39m {\u001b[33m...\u001b[39mprops}\u001b[33m/\u001b[39m\u001b[33m>\u001b[39m \u001b[33m:\u001b[39m \u001b[33m<\u001b[39m\u001b[33mRedirect\u001b[39m to\u001b[33m=\u001b[39m\u001b[32m\"/signup\"\u001b[39m\u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\n \u001b[90m 23 | \u001b[39m    )}\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 | \u001b[39m}\n \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 | \u001b[39m\n \u001b[90m 26 | \u001b[39m\u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m \u001b[33mAuthRoute\u001b[39m \u001b[33m=\u001b[39m withRouter(connect(mapStateToProps)(\u001b[33mAuth\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m 27 | \u001b[39m\u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m \u001b[33mProtectedRoute\u001b[39m \u001b[33m=\u001b[39m withRouter(connect(mapStateToProps)(\u001b[33mProtected\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m\n");
 
 /***/ })
 /******/ ]);
