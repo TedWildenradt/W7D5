@@ -16,7 +16,7 @@ const logoutCurrentUser = () => ({ // Action creator
   type: LOGOUT_CURRENT_USER,
 });
 
-export const createNewUser = formUser => dispatch => postUser(form)
+export const createNewUser = formUser => dispatch => postUser(formUser)
   .then((user) => dispatch(receiveCurrentUser(user)));
 
 export const login = formUser => dispatch => postSession(formUser)
