@@ -4,16 +4,16 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user
 
   def login(user)
+    user.reset_session_token
+    session[:session_token] = user.session_token
     @current_user = user
-    user = User.find_by_credentials(user[:username], user[:password])
-    session[:session_token] = user.reset_session_token
 
   end
 
   def logout
     current_user.reset_session_token
     session[:session_token] = nil
-    @current_user = nil 
+    @current_user = nil
   end
 
   def require_login
