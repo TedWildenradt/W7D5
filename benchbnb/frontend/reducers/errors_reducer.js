@@ -1,7 +1,7 @@
-import {combineReducer} from 'redux';
+import {combineReducers} from 'redux';
 import sessionErrorsReducer from './sessions_errors_reducer';
 
-const errorsReducer = combineReducer({
+const errorsReducer = combineReducers({
   session: sessionErrorsReducer
 });
 
