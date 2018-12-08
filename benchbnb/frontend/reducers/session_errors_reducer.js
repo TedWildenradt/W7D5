@@ -1,6 +1,6 @@
 import {RECEIVE_SESSION_ERRORS, RECEIVE_CURRENT_USER} from '../actions/session_actions';
 
-export const sessionErrorsReducer = (state = [], action) => {
+const sessionErrorsReducer = (state = [], action) => {
   switch (action.type) {
     case RECEIVE_SESSION_ERRORS:
       return action.errors;
@@ -11,3 +11,5 @@ export const sessionErrorsReducer = (state = [], action) => {
 
   }
 };
+
+export default sessionErrorsReducer;
